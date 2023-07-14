@@ -1,0 +1,36 @@
+matches:
+
+# figlet, used for ASCII banner text
+
+  - trigger: ";cfig"
+    replace: "{{figlet_comment}}"
+    vars:
+      - name: figlet_comment
+        type: shell
+        params:
+          cmd: sed s/^/#\ / $HOME/figlet.tmp
+
+  - trigger: ";fig"
+    replace: "{{figlet_paste}}"
+    vars:
+      - name: "form1"
+        type: form
+        params:
+          layout: "Text: [[text]] Stye: [[style]]"
+          fields:
+            text:
+              multiline: false 
+            style:
+              type: choice
+              values: |
+                      alligator
+                      larry3d
+                      ANSI\ regular
+                      graffiti
+                      slant
+                      banne
+                      calligraphy2
+      - name: figlet_paste
+        type: shell
+        params:
+          cmd: "figlet -k -f {{form1.style}} {{form1.text}} > $HOME/figlet.tmp && cat $HOME/figlet.tmp | pbcopy"

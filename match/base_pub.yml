@@ -1,0 +1,113 @@
+# espanso match file
+
+# For a complete introduction, visit the official docs at: https://espanso.org/docs/
+
+# You can use this file to define the base matches (aka snippets)
+# that will be available in every application when using espanso.
+
+# Matches are substitution rules: when you type the "trigger" string
+# it gets replaced by the "replace" string.
+# sed replacement of lines:
+# sed -n '1,10p' -i 's/^/^#/' filename
+# remove comment from line (for example lines 1-10):
+# sed -n '1,10p' -i 's/^#//' filename
+
+global_vars:
+  - name: paste_word
+    type: "clipboard"
+
+  - name: imgdir
+    type: echo
+    params:
+      echo: '$CONFIG/images'
+
+matches:
+
+  # create symlink from .config/espanso to Library.
+  - triggers: [":Esymlink",':makesymlink']
+    replace: "{{ask1.choice}}{{symlink}}"
+    vars:
+    - name: ask1
+      type: form
+      params:
+        layout: "⚠️ Are you sure you want to create this symlink?\n (close window if not)"
+        fields:
+          choices:
+            type: choice
+            values:
+              - Yes
+    - name: symlink
+      type: shell
+      params:
+        cmd: "./$CONFIG/scripts/espanso_symlink.sh"
+
+  # But matches can also be dynamic:
+  - trigger: "espanos"
+    replace: "espanso"
+# Time
+  # Print the current date. Read more: https://espanso.org/docs/matches/extensions/#date-extension
+  - trigger: ";date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y-%m-%d"
+
+  - trigger: ";tdate"  #terminal date
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y%m%d"
+
+  - trigger: ";time"
+    replace: "{{mytime}}"
+    vars:
+      - name: mytime
+        type: date
+        params:
+          format: "%Y-%m-%d@%H:%M"
+# time only ('short time')
+  - trigger: ';stime'
+    replace: "{{mytime}}"
+    vars:
+      - name: mytime
+        type: date
+        params:
+          format: "%H:%M %P"
+
+# Espanso trigger-making expansions.
+  - trigger: ':trig'
+    replace: "- trigger: ';'\n  replace: '$|$'"
+  - trigger: ";ptrig" # paste clipboard to replacement
+    replace: "- trigger: ';$|$'\n    replace: '{{paste_word}}'"
+  - trigger: ";strig"
+    replace: "- triggers: [';$|$']\n    replace: '{{paste_word}}'"
+  - trigger: ';itrig' # for images
+    replace: "- trigger: ';'\n  image_path: '{{imgdir}}/$|$'"
+
+
+# simple espanso yml template from form response
+  - trigger: ";espt"
+    replace: |
+                - trigger: "{{key_combo.input}}"
+                  replace: $|$
+    vars:
+      - name: key_combo
+        type: form
+        params:
+          layout: "Key sequence: [[input]]"
+          fields:
+            input:
+      # - name: template
+      #   type: echo
+      #   params:
+      #     echo: | 
+      #             - trigger: "{{key_combo.input}}"
+      #               replace: "$|$"
+
+  # And much more! For more information, visit the docs: https://espanso.org/docs/
+
+  

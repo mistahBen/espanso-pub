@@ -1,0 +1,63 @@
+## Global variables
+# change these to personalize your expansions 🙂
+global_vars:
+  - name: firstname 
+    type: echo
+    params:
+      echo: 'Name'
+
+  - name: lastname
+    type: echo
+    params:
+      echo: 'lname'
+  
+  - name: userName
+    type: echo
+    params:
+      echo: 'YourUsername'
+  - name: domain
+    type: echo
+    params:
+      echo: 'domain.com'
+  - name: atdomain
+    type: echo
+    params:
+      echo: '@{{domain}}'
+  - name: myEmail
+    type: echo
+    params: 
+      echo: '{{userName}}{{atdomain}}'
+
+  - name: jobDesc
+    type: echo
+    params:
+      echo: 'Technology Specialist'
+
+matches:
+  # simple email sig
+  - trigger: ";sig"
+    replace: |
+              ---
+              {{firstname}} {{lastname}}
+              {{jobDesc}}
+              {{myEmail}}
+
+# markdown and obsidian
+
+
+
+## Terminal - personal
+# ⚠️ - these expansions use colons":" instead of ";"
+# "d" = directory
+  - trigger: ":docs"
+    replace: "~/Documents"
+  - trigger: ":gh"
+    replace: "~/github"
+
+## searches, etc.
+  # python search without garbage top results
+  - trigger: ";py"
+    replace: "-site:programiz.com -site:geeksforgeeks.org after:2020 python"
+  - trigger: ';sr' # search reddit
+    replace: 'site:reddit.com'
+

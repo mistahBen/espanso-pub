@@ -1,0 +1,42 @@
+global_vars:
+  - name: obsidVault
+    type: echo
+    params:
+      echo: '$HOME/path/to/obsidian/vault'
+
+matches:
+  - trigger: ';mdtable' # simple 2 column table
+    replace: |
+              | {{form1.header1}} | {{form1.header2}} |
+              | --- | --- |
+    vars:
+    - name: 'form1'
+      type: form
+      params:
+        layout: "| [[header1]] | [[header2]] |"
+        fields: 
+          header1:
+            multiline: false
+          header2:
+            multiline: false
+
+  - triggers: [";mdlink", ';murl', ';mdp'] # Create markdown syntax link
+    replace: "[$|$]({{paste_link}})"
+    word: true
+    vars:
+    - name: paste_link
+      type: "clipboard"
+
+# Terminal/shell commands to interact with vault.
+
+  ## can be used with various terminal output.
+  ##  example: `$ cat myfile.txt {;toobsid}` the [enter] to create note or append to existing note.;toobsid
+  - trigger: ";toobsid" # 'to obsidian'. If you want to put in a subfolder, add that between {{obsidVault}} and the {{entry}}
+    replace: |
+            >> {{obsidVault}}/{{entry}}.md 
+    vars:
+      - name: entry
+        type: date
+        label: YY-MM-DD
+        params:
+          format: "%Y-%m-%d"

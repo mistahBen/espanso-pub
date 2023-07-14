@@ -1,0 +1,151 @@
+# TEMPLATES #
+# used for entering variable info with a form
+# - trigger: ";notification"
+    # replace: |
+    #           TEXTHERE {{form1.details}} MORETEXT{{form1.title}}
+    # vars:
+    #   - name: form1
+    #     type: form
+    #     params:
+    #       layout: "title:[[title]]   details:[[details]]" 
+# Globals
+global_vars:
+  - name: 'term-bell'
+    type: echo
+    params:
+      echo: 'afplay /System/Library/Sounds/Ping.aiff'
+
+  - name: userName
+    type: echo
+    params:
+      echo: 'YOURUSERNAMEHERE'
+
+# Matches
+# Terminal commands
+matches:
+#MacOS
+
+# open display preferences
+  - trigger: ":DX"
+    replace: "{{displays}}"
+    label: "Open Display SysPrefs"
+    vars:
+      - name: displays
+        type: shell
+        params:
+          cmd: "open /System/Library/PreferencePanes/Displays.prefPane"
+
+# system_profiler parsing
+
+  - trigger: ";powerstat"
+    replace: "{{powerstat}}"
+    word: true
+    vars:
+      - name: powerstat
+        type: shell
+        params:
+          cmd: "system_profiler SPPowerDataType"
+  - trigger: ';powertest'
+    replace: 'system_profiler SPPowerDataType'
+    word: true
+
+# print wifi information
+
+  - trigger: ";wifistat"
+    replace: "{{getwifi}}"
+    vars:
+      - name: getwifi 
+        type: shell
+        params:
+          cmd: "/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I"
+
+  # Add OS system notification to script
+  - trigger: ";notification"
+    replace: |
+              osascript -e 'display notification "{{form1.details}}" with title "{{form1.title}}"'
+    vars:
+      - name: form1
+        type: form
+        params:
+          layout: "title:[[title]]   details:[[details]]"
+
+# rsync shortcut
+  - trigger: ";rsync"
+    replace: "rsync -aE"
+
+# bash command bell sound
+  - trigger: ";tbell"
+    replace: "{{bellsound}}"
+    vars:
+      - name: bellsound
+        type: shell
+        params:
+          cmd: "{{term-bell}}"
+      - name: term-bell
+        type: global
+
+## CONFIGURATOR
+
+# REMINDER: Espanso reads vars in the order they are written.
+  - trigger: ";cfsn"
+    type: echo
+    replace: "{{cfgserial}}"
+    vars:
+      - name: term-bell
+        type: global # indicates a global var
+      - name: cfgserial
+        type: shell
+        params:
+          cmd: "cfgutil pair && cfgutil get serialNumber | pbcopy && {{term-bell}}"
+  
+
+  # AWK search syntax
+  - trigger: ";awkgr"
+    replace: |
+              awk OFS="," '/search/ \{print \}'
+    label: "awk syntax when searching for matches"
+  
+# SSH
+  - trigger: ";ssh"
+    replace: "ssh {{userName}}@{{clipboard}}"
+    vars:
+      - name: "clipboard"
+        type: "clipboard"
+    label: "SSH to clipboard contents"
+
+# clipboard 'juggling'
+## this allows for 'grabbing' a string by copying it, storing it in a small file and then reading it out as needed. Note that you need to be able to type the triggers into a field (can be any field, even a note/text edit window) in order to get this to work properly.
+  - trigger: ";cline"
+    replace: "{{store_line}}"
+    vars:
+      - name: store_line
+        type: shell
+        params:
+          cmd: |
+                pbpaste > /Users/{{userName}}/.stringtemp
+    label: "Store clipboard in temp file. for use with ;vpaste"
+  - trigger: ";vpaste"
+    replace: "{{paste_text}}"
+    vars:
+    - name: pass_text
+      type: shell
+      params:
+        cmd: |
+              cat /Users/{{userName}}/.strigtemp | pbcopy
+    label: "Paste contents of ;cline"
+
+# create a basic list in terminal. End list with "EOF" to finish entries.
+
+  - trigger: ";basiclist"
+    form: "cat <<EOF >> [[filename]].csv"
+    label: "[shell] simple list to CSV file"
+
+  - trigger: ';igrep'
+    replace: 'grep $|$ ~/db/devices/jamf_ipad_list.csv'
+  - trigger: ';vgrep'
+    replace: '{{vgrep}}'
+    vars:
+      - name: vgrep
+        type: shell
+        params:
+          cmd: grep "$(pbpaste)" ~/db/devices/jamf_ipad_list.csv

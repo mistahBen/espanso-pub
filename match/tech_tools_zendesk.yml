@@ -1,0 +1,36 @@
+# Zendesk matches
+global_vars:
+  - name: zendeskUrl
+    type: echo
+    params:
+      echo: "https://yourzendesk.zendesk.com"
+matches:
+#  _____                    __             __  
+# /__  /  ___   ____   ____/ /___   _____ / /__
+#   / /  / _ \ / __ \ / __  // _ \ / ___// //_/
+#  / /__/  __// / / // /_/ //  __/(__  )/ ,<   
+# /____/\___//_/ /_/ \__,_/ \___//____//_/|_|  
+
+# Liquid markup
+  - trigger: ";rq"
+    replace: |
+              \{\{ticket.requester.first_name\}\}
+
+# links
+## Macros personal
+  - trigger: ";zmac"
+    replace: "{{zendeskUrl}}/admin/workspaces/agent-workspace/macros?access=personal&active=true&page=1&per_page=100&sort_by=alphabetical"
+
+## Views
+  - trigger: ";zviews"
+    replace: "{{zendeskUrl}}/admin/workspaces/agent-workspace/views?access=personal&active=true&page=1&per_page=100&sort_by=position"
+    
+  - trigger: ";zvnew"
+    replace: "{{zendeskUrl}}admin/workspaces/agent-workspace/views/new"
+# search
+## order by most recent, type in search field
+  - trigger: ";zup"
+    replace: "order_by:updated_at sort:desc"
+  # show only solved tickets
+  - trigger: ";zsolve"
+    replace: "status:open"

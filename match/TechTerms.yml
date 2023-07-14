@@ -1,0 +1,44 @@
+# Apple and tech brand replacements
+## reminder: "word: " means the expansion only occurs when the text is separated by spaces
+matches:
+#apple
+  - trigger: "appleid"
+    replace: "Apple ID"
+    word: true
+  - trigger: "macbook"
+    replace: "Macbook"
+    word: true
+  - triggers: ["ipad", "iapd", "ipd"]
+    replace: "iPad"
+    word: true
+  - trigger: "macos"
+    replace: "MacOS"
+    word: true
+  - trigger: ";mba"
+    replace: "Macbook Air"
+    word: true
+  - trigger: ";mbp"
+    replace: Macbook Pro
+    word: true
+  - trigger: "iphone"
+    replace: "iPhone"
+    word: true
+#google, 1password, Microsoft, and others
+  - triggers: ["chromebook", ";cb", "chromebk", "chrombook"]
+    replace: "Chromebook"
+    word: true
+  - trigger: "google"
+    replace: "Google"
+    word: true
+  - trigger: "facebook"
+    replace: "Facebook"
+    word: true
+  - triggers: ["youtube", "yuotube", "youtoube"]
+    replace: "Youtube"
+    word: true
+  - trigger: "chromeos"
+    replace: "ChromeOS"
+    word: true
+  - triggers: [';1p', '1password']
+    replace: '1Password'
+    word: true
