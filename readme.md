@@ -7,6 +7,7 @@ I created this repository because my expansions go beyond a more straightforward
 
 If you use things like Zendesk, and the terminal, there are a good variety of replacements here. Please review the codebase before downloading to determine if this is a good fit for your workflows.
 
+## There is a 'slimmed" down version of this repository that includes far fewer match files at the fork here: [Espanso-personalize-config](https://github.com/mistahBen/Espanso-personalize-config
 # easy, reusable customizations
 ## `_global_vars.yml` file
 
