@@ -1,8 +1,5 @@
-global_vars:
-  - name: imgdir
-    type: echo
-    params:
-      echo: '$CONFIG/images'
+extra_includes: "_global_vars.yml"
+
 matches:
   - trigger: ';comeon'
     image_path: '$CONFIG/images/555comeonnow.png'

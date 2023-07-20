@@ -1,5 +1,6 @@
-# TEMPLATES #
+# TEMPLATE #
 # used for entering variable info with a form
+
 # - trigger: ";notification"
     # replace: |
     #           TEXTHERE {{form1.details}} MORETEXT{{form1.title}}
@@ -8,17 +9,14 @@
     #     type: form
     #     params:
     #       layout: "title:[[title]]   details:[[details]]" 
+
 # Globals
+
 global_vars:
   - name: 'term-bell'
     type: echo
     params:
       echo: 'afplay /System/Library/Sounds/Ping.aiff'
-
-  - name: userName
-    type: echo
-    params:
-      echo: 'YOURUSERNAMEHERE'
 
 # Matches
 # Terminal commands
@@ -107,7 +105,7 @@ matches:
   
 # SSH
   - trigger: ";ssh"
-    replace: "ssh {{userName}}@{{clipboard}}"
+    replace: "ssh {{myusername}}@{{clipboard}}"
     vars:
       - name: "clipboard"
         type: "clipboard"
@@ -122,7 +120,7 @@ matches:
         type: shell
         params:
           cmd: |
-                pbpaste > /Users/{{userName}}/.stringtemp
+                pbpaste > /Users/{{myusername}}/.stringtemp
     label: "Store clipboard in temp file. for use with ;vpaste"
   - trigger: ";vpaste"
     replace: "{{paste_text}}"
@@ -131,7 +129,7 @@ matches:
       type: shell
       params:
         cmd: |
-              cat /Users/{{userName}}/.strigtemp | pbcopy
+              cat /Users/{{myusername}}/.strigtemp | pbcopy
     label: "Paste contents of ;cline"
 
 # create a basic list in terminal. End list with "EOF" to finish entries.

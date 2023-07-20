@@ -2,81 +2,27 @@
 
 # For a complete introduction, visit the official docs at: https://espanso.org/docs/
 
-# You can use this file to define the base matches (aka snippets)
-# that will be available in every application when using espanso.
-
-# Matches are substitution rules: when you type the "trigger" string
-# it gets replaced by the "replace" string.
-# sed replacement of lines:
-# sed -n '1,10p' -i 's/^/^#/' filename
-# remove comment from line (for example lines 1-10):
-# sed -n '1,10p' -i 's/^#//' filename
-
-global_vars:
-  - name: paste_word
-    type: "clipboard"
-
-  - name: imgdir
-    type: echo
-    params:
-      echo: '$CONFIG/images'
-
 matches:
 
-  # create symlink from .config/espanso to Library.
-  - triggers: [":Esymlink",':makesymlink']
-    replace: "{{ask1.choice}}{{symlink}}"
-    vars:
-    - name: ask1
-      type: form
-      params:
-        layout: "⚠️ Are you sure you want to create this symlink?\n (close window if not)"
-        fields:
-          choices:
-            type: choice
-            values:
-              - Yes
-    - name: symlink
-      type: shell
-      params:
-        cmd: "./$CONFIG/scripts/espanso_symlink.sh"
-
-  # But matches can also be dynamic:
   - trigger: "espanos"
     replace: "espanso"
-# Time
-  # Print the current date. Read more: https://espanso.org/docs/matches/extensions/#date-extension
+# Time triggers
+
   - trigger: ";date"
-    replace: "{{mydate}}"
-    vars:
-      - name: mydate
-        type: date
-        params:
-          format: "%Y-%m-%d"
+    replace: "{{date}}"
+  - trigger: ';usdate'
+    replace: "{{usdate}}"
+  - triggers: [';eudate', ';eurodate']
+    replace: "{{eurodate}}"
+  - trigger: ";tdate"
+    replace: "{{tdate}}"
 
-  - trigger: ";tdate"  #terminal date
-    replace: "{{mydate}}"
-    vars:
-      - name: mydate
-        type: date
-        params:
-          format: "%Y%m%d"
-
-  - trigger: ";time"
-    replace: "{{mytime}}"
-    vars:
-      - name: mytime
-        type: date
-        params:
-          format: "%Y-%m-%d@%H:%M"
+  - triggers: [";fdate", ';ftime'] # full date with time
+    replace: "{{longdt}}"
+ 
 # time only ('short time')
   - trigger: ';stime'
-    replace: "{{mytime}}"
-    vars:
-      - name: mytime
-        type: date
-        params:
-          format: "%H:%M %P"
+    replace: "{{stime}}"
 
 # Espanso trigger-making expansions.
   - trigger: ':trig'
@@ -98,16 +44,32 @@ matches:
       - name: key_combo
         type: form
         params:
-          layout: "Key sequence: [[input]]"
+          layout: "Key combo: [[input]]"
           fields:
             input:
-      # - name: template
-      #   type: echo
-      #   params:
-      #     echo: | 
-      #             - trigger: "{{key_combo.input}}"
-      #               replace: "$|$"
 
-  # And much more! For more information, visit the docs: https://espanso.org/docs/
+
+#For more information, visit the docs: https://espanso.org/docs/
 
   
+  - trigger: ":editmatch"
+    replace: "{{edit_file}}"
+    vars:
+      - name: files
+        type: shell
+        params:
+          cmd: "find $CONFIG/match -maxdepth 1"
+      - name: form1
+        type: form
+        params:
+          layout: |
+            Select file:
+            [[file]]
+          fields:
+            file:
+              type: list
+              values: "{{files}}"
+      - name: edit_file
+        type: shell
+        params:
+          cmd: '{{text_editor}} {{form1.file}}'

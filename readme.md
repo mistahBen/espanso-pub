@@ -5,11 +5,18 @@ Feel free to take these as inspiration or use them directly.
 
 I created this repository because my expansions go beyond a more straightforward package and there are a few additional (free) tools that you'll need to use everything.
 
-This repository is a subset of my full espanso list that has default placeholders for variables like names, domains, etc. *So be sure to edit those for yourself.*
-
 If you use things like Zendesk, and the terminal, there are a good variety of replacements here. Please review the codebase before downloading to determine if this is a good fit for your workflows.
 
-## Additional recommended tools
+# easy, reusable customizations
+## `_global_vars.yml` file
+
+In the top level of the config folder is a special YAML file called `_global_vars.yml`. This file is referenced in the main Espanso configuration file(`config/default.yml`) and is populated with default variable values that you should change for yourself. You can then also reference them in your own configs like any other variable established in the local yaml file.
+
+This means that you can use your work username (for example) across multiple yaml files just by using the {{username}} variable
+
+
+
+# Additional recommended tools
 - Figlet
 - Obsidian
 

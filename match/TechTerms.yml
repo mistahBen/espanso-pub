@@ -1,5 +1,5 @@
 # Apple and tech brand replacements
-## reminder: "word: " means the expansion only occurs when the text is separated by spaces
+## reminder: "word: " means the expansion only occurs when the text is separated by spaces.
 matches:
 #apple
   - trigger: "appleid"
